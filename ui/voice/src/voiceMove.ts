@@ -187,8 +187,10 @@ class VoiceMoveCtrl implements VoiceMove {
     if (c === 'stop') {
       lichess.mic?.stop();
       this.clearMoveProgress();
-    } else if (c === 'no' && this.showHelp()) this.showHelp(false);
-    else if (c === 'help') this.showHelp(true);
+    } else if (c === 'no') {
+      if (this.showHelp()) this.showHelp(false);
+      else this.clearMoveProgress();
+    } else if (c === 'help') this.showHelp(true);
     else if (c === 'flip') this.root.flipNow();
     else if (c === 'rematch') this.root.rematch?.(true);
     else if (c === 'draw') this.root.offerDraw?.(true, false);
@@ -405,6 +407,7 @@ class VoiceMoveCtrl implements VoiceMove {
         const drole = dp.toUpperCase(); // takes
         xtokset.add(`${srole}${drole}`);
         xtokset.add(`${srole}x${drole}`);
+        pushMap(moves, `${srole},x`, uci); // keep out of xtokset to avoid conflicts with promotion
         xtokset.add(`x${drole}`);
         xtokset.add(`x`);
       }
